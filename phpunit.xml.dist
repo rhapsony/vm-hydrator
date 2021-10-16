@@ -1,0 +1,26 @@
+<phpunit
+        bootstrap="vendor/autoload.php"
+        colors="true"
+        verbose="true"
+>
+    <testsuites>
+        <testsuite name="Rhapsony Test Suite">
+            <file>tests/FrameworkTest.php</file>
+            <file>tests/ExceptionTest.php</file>
+            <file>tests/DataHydrationTest.php</file>
+            <file>tests/QueryHydrationTest.php</file>
+            <file>tests/CombinedHydrationTest.php</file>
+        </testsuite>
+    </testsuites>
+
+    <php>
+        <env name="KERNEL_CLASS" value="Rhapsony\ViewModelHydrator\Tests\HttpKernel\TestKernel" force="true" />
+        <env name="APP_ENV" value="testing" force="true" />
+    </php>
+
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </coverage>
+</phpunit>

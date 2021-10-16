@@ -1,0 +1,7 @@
+# Development
+/composer.lock
+/vendor
+
+# Testing
+/.phpunit.result.cache
+/var
