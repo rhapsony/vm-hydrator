@@ -26,11 +26,17 @@ class DbalQueryExecutor implements QueryExecutorInterface
         $result = $this->connection->executeQuery($sql, $params, $types);
         switch ($fetchMode) {
             case ViewModelHydratorInterface::FETCH_COLLECTION:
-                return $result->fetchAllAssociative();
+                $ret = $result->fetchAllAssociative();
+                if (false === $ret) return [];
+                return $ret;
             case ViewModelHydratorInterface::FETCH_COLUMN:
-                return $result->fetchOne();
+                $ret = $result->fetchOne();
+                if (false === $ret) return null;
+                return $ret;
             case ViewModelHydratorInterface::FETCH_ROW:
-                return $result->fetchAssociative();
+                $ret = $result->fetchAssociative();
+                if (false === $ret) return [];
+                return $ret;
             default:
                 throw new UnsupportedFetchModeException();
         }
