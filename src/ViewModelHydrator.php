@@ -63,7 +63,6 @@ class ViewModelHydrator implements ViewModelHydratorInterface
         $this->params = [];
         $this->types = [];
         $this->data = [];
-        $this->set = [];
         $this->propertyPath = null;
         return $this;
     }
