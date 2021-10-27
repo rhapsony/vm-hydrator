@@ -282,4 +282,28 @@ class DataHydrationTest extends AbstractTestCase
         $this->assertEquals($expected, $actual);
         $this->assertInitialDateTime($actual);
     }
+
+    public function testSetPropertyPathDirectly(): void
+    {
+        $nested = (new TestNestedViewModel())
+            ->setString('nested-string')
+            ->setBool(true)
+            ->setInt(2)
+            ->setFloat(4.5);
+
+        $expected = new TestViewModel();
+        $expected->getNestedViewModel()
+            ->setString('nested-string')
+            ->setBool(true)
+            ->setInt(2)
+            ->setFloat(4.5);
+
+        $actual = $this->hydrator
+            ->start(TestViewModel::class)
+            ->propertyPath('nestedViewModel')
+            ->set('nestedViewModel', $nested)
+            ->finish();
+
+        $this->assertEquals($expected, $actual);
+    }
 }
