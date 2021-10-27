@@ -291,7 +291,12 @@ class DataHydrationTest extends AbstractTestCase
             ->setInt(2)
             ->setFloat(4.5);
 
-        $expected = new TestViewModel();
+        $expected = (new TestViewModel())
+            ->setString('string')
+            ->setBool(true)
+            ->setInt(1)
+            ->setFloat(1.5)
+            ->setDateTime(new DateTime(self::DATETIME_HYDRATED));
         $expected->getNestedViewModel()
             ->setString('nested-string')
             ->setBool(true)
@@ -302,6 +307,14 @@ class DataHydrationTest extends AbstractTestCase
             ->start(TestViewModel::class)
             ->propertyPath('nestedViewModel')
             ->set('nestedViewModel', $nested)
+            ->next()
+            ->data([
+                'string' => 'string',
+                'bool' => true,
+                'int' => 1,
+                'float' => 1.5,
+                'dateTime' => self::DATETIME_HYDRATED
+            ])
             ->finish();
 
         $this->assertEquals($expected, $actual);

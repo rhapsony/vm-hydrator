@@ -35,6 +35,13 @@ class ExceptionTest extends AbstractTestCase
         $this->hydrator->finish();
     }
 
+    public function testExceptionWillBeThrownIfViewModelIsNotInitializedWhenCallingSet(): void
+    {
+        $this->expectException(ViewModelNotInitializedException::class);
+
+        $this->hydrator->set('test', 'test');
+    }
+
     public function testExceptionWillBeThrownIfNoPropertyPathIsSetForColumn(): void
     {
         $this->expectException(PropertyPathNotSetException::class);
