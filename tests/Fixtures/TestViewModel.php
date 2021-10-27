@@ -128,6 +128,16 @@ class TestViewModel
     }
 
     /**
+     * @param TestNestedViewModel $nestedViewModel
+     * @return $this
+     */
+    public function setNestedViewModel(TestNestedViewModel $nestedViewModel): self
+    {
+        $this->nestedViewModel = $nestedViewModel;
+        return $this;
+    }
+
+    /**
      * @return TestNestedViewModel[]
      */
     public function getSimpleArray(): array

@@ -7,6 +7,7 @@ namespace Rhapsony\ViewModelHydrator;
 use Rhapsony\ViewModelHydrator\Exception\PropertyPathNotSetException;
 use Rhapsony\ViewModelHydrator\Exception\UnsupportedFetchModeException;
 use Rhapsony\ViewModelHydrator\Exception\ViewModelNotInitializedException;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -29,6 +30,7 @@ class ViewModelHydrator implements ViewModelHydratorInterface
     private array $params = [];
     private array $types = [];
     private array $data = [];
+    private array $set = [];
     private ?string $propertyPath = null;
     private DenormalizerInterface $denormalizer;
 
@@ -61,6 +63,7 @@ class ViewModelHydrator implements ViewModelHydratorInterface
         $this->params = [];
         $this->types = [];
         $this->data = [];
+        $this->set = [];
         $this->propertyPath = null;
         return $this;
     }
@@ -148,6 +151,15 @@ class ViewModelHydrator implements ViewModelHydratorInterface
     /**
      * @inheritDoc
      */
+    public function set(string $propertyPath, $data): ViewModelHydratorInterface
+    {
+        $this->set[$propertyPath] = $data;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function propertyPath(?string $propertyPath = null): self
     {
         $this->propertyPath = $propertyPath;
@@ -161,6 +173,7 @@ class ViewModelHydrator implements ViewModelHydratorInterface
     {
         $this->retrieveData();
 
+        // Hydrate
         $this->denormalizer->denormalize($this->done, get_class($this->viewModel), null, [
             AbstractNormalizer::OBJECT_TO_POPULATE => $this->viewModel,
             AbstractObjectNormalizer::DEEP_OBJECT_TO_POPULATE => true,
@@ -170,6 +183,15 @@ class ViewModelHydrator implements ViewModelHydratorInterface
             */
         ]);
         $this->done = [];
+
+        // Set direct property paths
+        if (!empty($this->set)) {
+            $accessor = new PropertyAccessor();
+            foreach($this->set as $propertyPath => $value) {
+                $accessor->setValue($this->viewModel, $propertyPath, $value);
+            }
+        }
+
         return $this->viewModel;
     }
 

@@ -100,6 +100,15 @@ interface ViewModelHydratorInterface
     public function data(array $data): self;
 
     /**
+     * Sets the data for a property path directly, without hydration.
+     *
+     * @param string $propertyPath
+     * @param mixed $data
+     * @return $this
+     */
+    public function set(string $propertyPath, $data): self;
+
+    /**
      * Sets the property path of the view model as target of the hydration.
      *
      * @param string|null $propertyPath
